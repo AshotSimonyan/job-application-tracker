@@ -5,8 +5,8 @@ import { useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
-import { authFormSchema } from "@/features/auth/schemas/auth-form.schema";
 import { authFormContent } from "@/features/auth/content/auth-content";
+import { authFormSchema } from "@/features/auth/schemas/auth-form.schema";
 import type { AuthFormProps, AuthFormValues } from "@/features/auth/types";
 import { cn } from "@/lib/utils/cn";
 
@@ -108,6 +108,17 @@ export const AuthForm = ({ mode, action, message, next }: AuthFormProps) => {
           ) : null}
         </label>
       </div>
+
+      {mode === "sign-in" ? (
+        <div className="flex justify-end">
+          <Link
+            href="/auth/forgot-password"
+            className="text-brand text-sm font-semibold"
+          >
+            Forgot password?
+          </Link>
+        </div>
+      ) : null}
 
       <div className="border-line bg-surface-alt text-muted rounded-[1.5rem] border p-4 text-sm leading-7">
         {content.note}

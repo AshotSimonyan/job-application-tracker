@@ -1,18 +1,17 @@
 import { redirect } from "next/navigation";
 
-import { AuthForm } from "@/features/auth/components/auth-form";
 import { AuthShell } from "@/features/auth/components/auth-shell";
+import { ForgotPasswordForm } from "@/features/auth/components/forgot-password-form";
 import { SupabaseSetupState } from "@/features/auth/components/supabase-setup-state";
-import { signUpAction } from "@/features/auth/actions";
+import { requestPasswordResetAction } from "@/features/auth/actions";
 import type { AuthPageProps } from "@/features/auth/types";
-import { getAuthMessage, getSafeRedirectPath } from "@/features/auth/utils";
+import { getAuthMessage } from "@/features/auth/utils";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
-const SignUpPage = async ({ searchParams }: AuthPageProps) => {
+const ForgotPasswordPage = async ({ searchParams }: AuthPageProps) => {
   const params = await searchParams;
   const message = getAuthMessage(params);
-  const next = getSafeRedirectPath(params.next);
 
   if (isSupabaseConfigured()) {
     const supabase = await createServerSupabaseClient();
@@ -27,16 +26,14 @@ const SignUpPage = async ({ searchParams }: AuthPageProps) => {
 
   return (
     <AuthShell
-      eyebrow="Create account"
-      title="Start a more organized job search."
-      description="Set up a dedicated workspace for applications, interview prep, and every follow-up that matters."
+      eyebrow="Password recovery"
+      title="Recover access to your workspace."
+      description="Request a reset link and we will send you back into the app so you can set a new password."
     >
       {isSupabaseConfigured() ? (
-        <AuthForm
-          mode="sign-up"
-          action={signUpAction}
+        <ForgotPasswordForm
+          action={requestPasswordResetAction}
           message={message}
-          next={next}
         />
       ) : (
         <SupabaseSetupState />
@@ -45,4 +42,4 @@ const SignUpPage = async ({ searchParams }: AuthPageProps) => {
   );
 };
 
-export default SignUpPage;
+export default ForgotPasswordPage;

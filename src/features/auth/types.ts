@@ -30,6 +30,14 @@ export type AuthFormValues = {
   password: string;
 };
 
+export type ForgotPasswordFormValues = {
+  email: string;
+};
+
+export type ResetPasswordFormValues = {
+  password: string;
+};
+
 export type AuthShellProps = {
   title: string;
   description: string;
@@ -42,4 +50,14 @@ export type AuthFormProps = {
   action: AuthFormAction;
   message?: AuthMessage | null;
   next?: string;
+};
+
+export type ForgotPasswordFormProps = {
+  action: AuthFormAction;
+  message?: AuthMessage | null;
+};
+
+export type ResetPasswordFormProps = {
+  action: AuthFormAction;
+  message?: AuthMessage | null;
 };

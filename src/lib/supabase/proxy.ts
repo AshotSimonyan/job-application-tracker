@@ -1,14 +1,19 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-import { getSupabaseEnv } from "@/lib/supabase/env";
+import { getSupabaseEnv, isSupabaseConfigured } from "@/lib/supabase/env";
 import type { Database } from "@/lib/supabase/types";
 
 const AUTH_PATH = "/auth";
 const DASHBOARD_PATH = "/dashboard";
 const SIGN_IN_PATH = "/auth/sign-in";
+const AUTH_ALLOWLIST = new Set(["/auth/confirm", "/auth/reset-password"]);
 
 export const updateSession = async (request: NextRequest) => {
+  if (!isSupabaseConfigured()) {
+    return NextResponse.next({ request });
+  }
+
   let response = NextResponse.next({ request });
   const { url, anonKey } = getSupabaseEnv();
 
@@ -42,7 +47,11 @@ export const updateSession = async (request: NextRequest) => {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (user && request.nextUrl.pathname.startsWith(AUTH_PATH)) {
+  if (
+    user &&
+    request.nextUrl.pathname.startsWith(AUTH_PATH) &&
+    !AUTH_ALLOWLIST.has(request.nextUrl.pathname)
+  ) {
     return NextResponse.redirect(new URL(DASHBOARD_PATH, request.url));
   }
 
