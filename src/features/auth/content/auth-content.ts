@@ -26,7 +26,7 @@ export const authFormContent: Record<
     alternateHref: "/auth/sign-up",
     alternateLabel: "New here?",
     alternateAction: "Create an account",
-    note: "Use email or continue with a provider once authentication is connected.",
+    note: "Use the email and password linked to your workspace.",
   },
   "sign-up": {
     title: "Create your workspace",
@@ -36,6 +36,6 @@ export const authFormContent: Record<
     alternateHref: "/auth/sign-in",
     alternateLabel: "Already have an account?",
     alternateAction: "Sign in",
-    note: "A short setup flow can live here later for profile details and preferences.",
+    note: "If email confirmation is enabled, you will verify your address before signing in.",
   },
 };

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SignOutButton } from "@/features/auth/components/sign-out-button";
 import { dashboardNavItems } from "@/features/dashboard/content/dashboard-content";
 
 export const DashboardSidebar = () => {
@@ -38,6 +39,10 @@ export const DashboardSidebar = () => {
           Follow up with hiring teams, prepare for scheduled interviews, and
           keep your materials ready for the next role.
         </p>
+      </div>
+
+      <div className="mt-6">
+        <SignOutButton />
       </div>
     </aside>
   );
