@@ -1,13 +1,7 @@
 import Link from "next/link";
 
-import {
-  authFormContent,
-  type AuthMode,
-} from "@/features/auth/content/auth-content";
-
-type AuthFormPlaceholderProps = {
-  mode: AuthMode;
-};
+import { authFormContent } from "@/features/auth/content/auth-content";
+import type { AuthFormPlaceholderProps } from "@/features/auth/types";
 
 export const AuthFormPlaceholder = ({ mode }: AuthFormPlaceholderProps) => {
   const content = authFormContent[mode];

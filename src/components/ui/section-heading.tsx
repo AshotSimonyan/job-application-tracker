@@ -1,11 +1,5 @@
+import type { SectionHeadingProps } from "@/components/ui/section-heading.types";
 import { cn } from "@/lib/utils/cn";
-
-type SectionHeadingProps = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  className?: string;
-};
 
 export const SectionHeading = ({
   eyebrow,

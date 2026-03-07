@@ -1,11 +1,7 @@
 import Link from "next/link";
-import type { ComponentPropsWithoutRef } from "react";
 
+import type { ButtonLinkProps } from "@/components/ui/button-link.types";
 import { cn } from "@/lib/utils/cn";
-
-type ButtonLinkProps = ComponentPropsWithoutRef<typeof Link> & {
-  variant?: "primary" | "secondary" | "ghost";
-};
 
 const styles = {
   primary:

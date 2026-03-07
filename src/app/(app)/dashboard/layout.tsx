@@ -1,8 +1,6 @@
-const DashboardLayout = ({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) => {
+import type { AppLayoutProps } from "@/app/types";
+
+const DashboardLayout = ({ children }: AppLayoutProps) => {
   return children;
 };
 

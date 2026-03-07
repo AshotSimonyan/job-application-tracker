@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import Script from "next/script";
+import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { siteConfig } from "@/config/site";
+import type { AppLayoutProps } from "@/app/types";
 import "./globals.css";
 
 const sans = Space_Grotesk({
@@ -28,11 +29,7 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-const RootLayout = ({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) => {
+const RootLayout = ({ children }: AppLayoutProps) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${sans.variable} ${mono.variable}`}>

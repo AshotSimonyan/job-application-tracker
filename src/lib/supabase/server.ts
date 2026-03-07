@@ -1,27 +1,25 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-import { getSupabaseBrowserEnv } from "@/lib/supabase/env";
+import { getSupabaseEnv } from "@/lib/supabase/env";
 import type { Database } from "@/lib/supabase/types";
 
-export async function createServerSupabaseClient() {
+export const createServerSupabaseClient = async () => {
   const cookieStore = await cookies();
-  const { url, publishableKey } = getSupabaseBrowserEnv();
+  const { url, anonKey } = getSupabaseEnv();
 
-  return createServerClient<Database>(url, publishableKey, {
+  return createServerClient<Database>(url, anonKey, {
     cookies: {
-      getAll() {
-        return cookieStore.getAll();
-      },
-      setAll(cookiesToSet) {
+      getAll: () => cookieStore.getAll(),
+      setAll: (cookiesToSet) => {
         try {
           cookiesToSet.forEach(({ name, value, options }) => {
             cookieStore.set(name, value, options);
           });
         } catch {
-          // Server Components cannot persist cookies directly during render.
+          // Cookie writes are not available in all server render contexts.
         }
       },
     },
   });
-}
+};

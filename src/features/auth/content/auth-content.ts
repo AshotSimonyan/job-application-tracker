@@ -1,4 +1,4 @@
-export type AuthMode = "sign-in" | "sign-up";
+import type { AuthMode } from "@/features/auth/types";
 
 export const authMilestones = [
   "Keep every application in one workspace",

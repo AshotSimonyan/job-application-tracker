@@ -1,3 +1,8 @@
+export type SupabaseEnv = {
+  url: string;
+  anonKey: string;
+};
+
 export type Database = {
   public: {
     Tables: Record<string, never>;

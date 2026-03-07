@@ -1,12 +1,6 @@
+import type { AuthShellProps } from "@/features/auth/types";
 import { ButtonLink } from "@/components/ui/button-link";
 import { authMilestones } from "@/features/auth/content/auth-content";
-
-type AuthShellProps = {
-  title: string;
-  description: string;
-  eyebrow: string;
-  children: React.ReactNode;
-};
 
 export const AuthShell = ({
   title,

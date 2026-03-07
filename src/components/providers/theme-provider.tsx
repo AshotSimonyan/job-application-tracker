@@ -9,17 +9,14 @@ import {
   useSyncExternalStore,
 } from "react";
 
+import type {
+  Theme,
+  ThemeContextValue,
+  ThemeProviderProps,
+} from "@/components/providers/theme-provider.types";
+
 const THEME_STORAGE_KEY = "jat-theme";
 const THEME_EVENT = "jat-theme-change";
-
-type Theme = "light" | "dark";
-
-type ThemeContextValue = {
-  theme: Theme;
-  isMounted: boolean;
-  setTheme: (theme: Theme) => void;
-  toggleTheme: () => void;
-};
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
@@ -70,7 +67,7 @@ const applyTheme = (theme: Theme) => {
   document.documentElement.style.colorScheme = theme;
 };
 
-export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const theme = useSyncExternalStore(
     subscribeToTheme,
     getThemeSnapshot,
