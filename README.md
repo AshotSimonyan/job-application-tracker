@@ -40,3 +40,10 @@ src/
 ## Supabase Readiness
 
 The project includes browser and server Supabase client factories, environment validation helpers, and a placeholder database type definition so you can layer in auth, data access, and storage later without restructuring the app.
+
+## Database
+
+Initial Supabase schema files live in `supabase/migrations/`.
+
+- `20260307123000_initial_schema.sql` sets up the first app tables, enums, triggers, and row-level security policies.
+- `docs/database-schema.md` documents the table responsibilities and relationships.
