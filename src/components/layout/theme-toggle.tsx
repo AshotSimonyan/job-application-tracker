@@ -15,7 +15,7 @@ export const ThemeToggle = () => {
       onClick={toggleTheme}
       aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
       aria-pressed={isDark}
-      className="group border-line bg-surface hover:bg-surface-alt text-foreground inline-flex h-11 w-11 items-center justify-center rounded-full border shadow-[0_16px_32px_-24px_rgba(8,22,47,0.45)] transition-colors"
+      className="group border-line bg-surface-alt hover:bg-surface text-foreground inline-flex h-11 w-12 items-center justify-center rounded-2xl border shadow-[0_16px_32px_-24px_rgba(8,22,47,0.45)] transition-colors"
     >
       <span className="relative flex h-5 w-5 items-center justify-center overflow-hidden">
         <span

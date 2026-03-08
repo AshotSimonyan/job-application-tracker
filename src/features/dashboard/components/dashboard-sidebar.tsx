@@ -1,10 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { SignOutButton } from "@/features/auth/components/sign-out-button";
 import { dashboardNavItems } from "@/features/dashboard/content/dashboard-content";
 import type { DashboardSidebarProps } from "@/features/dashboard/types";
+import { cn } from "@/lib/utils/cn";
 
 export const DashboardSidebar = ({ data }: DashboardSidebarProps) => {
+  const pathname = usePathname();
+
   return (
     <aside className="border-line bg-panel text-panel-foreground rounded-[2rem] border p-6 shadow-[0_36px_100px_-62px_rgba(8,22,47,0.92)] lg:sticky lg:top-28 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:p-8">
       <div>
@@ -17,19 +23,24 @@ export const DashboardSidebar = ({ data }: DashboardSidebarProps) => {
       </div>
 
       <nav className="mt-10 grid gap-2">
-        {dashboardNavItems.map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            className={
-              item.active
-                ? "text-panel-foreground rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-sm font-semibold"
-                : "text-panel-foreground/70 hover:text-panel-foreground rounded-2xl px-4 py-3 text-sm transition-colors hover:bg-white/8"
-            }
-          >
-            {item.label}
-          </Link>
-        ))}
+        {dashboardNavItems.map((item) => {
+          const isActive = pathname === item.href;
+
+          return (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={cn(
+                "rounded-2xl px-4 py-3 text-sm transition-colors",
+                isActive
+                  ? "text-panel-foreground border border-white/10 bg-white/10 font-semibold"
+                  : "text-panel-foreground/70 hover:text-panel-foreground hover:bg-white/8",
+              )}
+            >
+              {item.label}
+            </Link>
+          );
+        })}
       </nav>
 
       <div className="mt-12 rounded-[1.5rem] border border-white/10 bg-white/5 p-4">

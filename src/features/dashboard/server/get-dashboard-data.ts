@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import {
   applicationStatusLabels,
   applicationStatusOrder,
@@ -9,6 +11,7 @@ import type {
   DashboardApplicationItem,
   DashboardData,
   DashboardMetric,
+  DashboardResumeItem,
   DashboardStatusSummaryItem,
 } from "@/features/dashboard/types";
 
@@ -38,14 +41,16 @@ const formatDate = (value: string) => {
   return dateFormatter.format(new Date(value));
 };
 
-const buildUpdatedLabel = (appliedAt: string | null, updatedAt: string, createdAt: string) => {
+const buildUpdatedLabel = (
+  appliedAt: string | null,
+  updatedAt: string,
+  createdAt: string,
+) => {
   if (appliedAt) {
     return `Applied ${formatDate(appliedAt)}`;
   }
 
-  const sourceDate = updatedAt || createdAt;
-
-  return `Updated ${formatDate(sourceDate)}`;
+  return `Updated ${formatDate(updatedAt || createdAt)}`;
 };
 
 const buildMetrics = (
@@ -90,22 +95,60 @@ const buildStatusSummary = (
   }));
 };
 
+const buildResumes = (
+  resumes: {
+    id: string;
+    name: string;
+    created_at: string;
+  }[],
+): DashboardResumeItem[] => {
+  return resumes.map((resume) => ({
+    id: resume.id,
+    name: resume.name,
+    createdAt: resume.created_at,
+    createdAtLabel: formatDate(resume.created_at),
+  }));
+};
+
 const buildApplications = (
   applications: {
     id: string;
-    company: string;
     title: string;
+    company: string;
+    location: string | null;
+    source: string | null;
+    url: string | null;
     status: ApplicationStatus;
+    notes: string | null;
+    resume_id: string | null;
     applied_at: string | null;
-    updated_at: string;
     created_at: string;
+    updated_at: string;
   }[],
+  resumes: DashboardResumeItem[],
 ): DashboardApplicationItem[] => {
+  const resumeMap = new Map(resumes.map((resume) => [resume.id, resume.name]));
+
   return applications.map((application) => ({
     id: application.id,
-    company: application.company,
     title: application.title,
-    status: statusDisplayMap[application.status],
+    company: application.company,
+    location: application.location,
+    source: application.source,
+    url: application.url,
+    status: application.status,
+    statusLabel: statusDisplayMap[application.status],
+    notes: application.notes,
+    resumeId: application.resume_id,
+    resumeName: application.resume_id
+      ? (resumeMap.get(application.resume_id) ?? null)
+      : null,
+    appliedAt: application.applied_at,
+    appliedAtLabel: application.applied_at
+      ? formatDate(application.applied_at)
+      : null,
+    createdAt: application.created_at,
+    updatedAt: application.updated_at,
     updatedLabel: buildUpdatedLabel(
       application.applied_at,
       application.updated_at,
@@ -114,51 +157,57 @@ const buildApplications = (
   }));
 };
 
-export const getDashboardData = async (): Promise<DashboardData> => {
+const getEmptyDashboardData = (): DashboardData => {
+  const emptySummary = {
+    saved: 0,
+    applied: 0,
+    interview: 0,
+    offer: 0,
+    rejected: 0,
+  } satisfies Record<ApplicationStatus, number>;
+
+  return {
+    applicationCount: 0,
+    resumeCount: 0,
+    memberSinceLabel: "Recently joined",
+    metrics: buildMetrics(0, 0, emptySummary),
+    applications: [],
+    recentApplications: [],
+    statusSummary: buildStatusSummary(emptySummary),
+    resumes: [],
+  };
+};
+
+export const getDashboardData = cache(async (): Promise<DashboardData> => {
   const supabase = await createServerSupabaseClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return {
-      applicationCount: 0,
-      resumeCount: 0,
-      memberSinceLabel: "Recently joined",
-      metrics: buildMetrics(0, 0, {
-        saved: 0,
-        applied: 0,
-        interview: 0,
-        offer: 0,
-        rejected: 0,
-      }),
-      applications: [],
-      statusSummary: buildStatusSummary({
-        saved: 0,
-        applied: 0,
-        interview: 0,
-        offer: 0,
-        rejected: 0,
-      }),
-    };
+    return getEmptyDashboardData();
   }
 
-  const [{ data: profile }, { count: resumeCount }, { data: applications }] = await Promise.all([
-    supabase.from("profiles").select("created_at").eq("id", user.id).maybeSingle(),
-    supabase
-      .from("resumes")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id),
-    supabase
-      .from("job_applications")
-      .select("id, company, title, status, applied_at, updated_at, created_at")
-      .eq("user_id", user.id)
-      .order("updated_at", { ascending: false }),
-  ]);
+  const [{ data: profile }, { data: resumeRows }, { data: applicationRows }] =
+    await Promise.all([
+      supabase.from("profiles").select("created_at").eq("id", user.id).maybeSingle(),
+      supabase
+        .from("resumes")
+        .select("id, name, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("job_applications")
+        .select(
+          "id, title, company, location, source, url, status, notes, resume_id, applied_at, created_at, updated_at",
+        )
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false }),
+    ]);
 
-  const safeResumeCount = resumeCount ?? 0;
-  const safeApplications = applications ?? [];
-  const statusSummary = safeApplications.reduce<Record<ApplicationStatus, number>>(
+  const resumes = buildResumes(resumeRows ?? []);
+  const applications = buildApplications(applicationRows ?? [], resumes);
+  const statusSummary = applications.reduce<Record<ApplicationStatus, number>>(
     (summary, application) => {
       summary[application.status] += 1;
       return summary;
@@ -173,13 +222,15 @@ export const getDashboardData = async (): Promise<DashboardData> => {
   );
 
   return {
-    applicationCount: safeApplications.length,
-    resumeCount: safeResumeCount,
+    applicationCount: applications.length,
+    resumeCount: resumes.length,
     memberSinceLabel: profile?.created_at
       ? `Member since ${formatDate(profile.created_at)}`
       : "Recently joined",
-    metrics: buildMetrics(safeApplications.length, safeResumeCount, statusSummary),
-    applications: buildApplications(safeApplications),
+    metrics: buildMetrics(applications.length, resumes.length, statusSummary),
+    applications,
+    recentApplications: applications.slice(0, 3),
     statusSummary: buildStatusSummary(statusSummary),
+    resumes,
   };
-};
+});

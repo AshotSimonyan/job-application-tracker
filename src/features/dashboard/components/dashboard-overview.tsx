@@ -1,3 +1,5 @@
+import { createJobApplicationAction } from "@/features/dashboard/actions";
+import { CreateApplicationForm } from "@/features/dashboard/components/create-application-form";
 import type { DashboardOverviewProps } from "@/features/dashboard/types";
 
 export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
@@ -12,8 +14,8 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
             Keep your applications moving forward.
           </h1>
           <p className="text-panel-foreground/72 mt-4 max-w-3xl text-base leading-7 sm:text-lg">
-            Review where each role stands, what needs attention this week, and
-            which conversations are coming up next.
+            Start a new application, review your current totals, and keep the
+            main pipeline visible from one place.
           </p>
         </div>
 
@@ -33,27 +35,29 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
         </div>
       </section>
 
-      <section
-        id="applications"
-        className="border-line bg-surface rounded-[2rem] border p-6 shadow-[0_24px_72px_-64px_rgba(8,22,47,0.28)] sm:p-8"
-      >
+      <CreateApplicationForm
+        action={createJobApplicationAction}
+        resumes={data.resumes}
+      />
+
+      <section className="border-line bg-surface rounded-[2rem] border p-6 shadow-[0_24px_72px_-64px_rgba(8,22,47,0.28)] sm:p-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-brand text-xs font-semibold tracking-[0.26em] uppercase">
               Recent activity
             </p>
             <h2 className="text-foreground mt-3 text-3xl font-semibold tracking-[-0.04em]">
-              Current applications
+              Latest applications
             </h2>
           </div>
           <p className="text-muted text-sm">
-            Latest entries from your workspace
+            Three most recent updates from your tracker
           </p>
         </div>
 
         <div className="mt-6 grid gap-4">
-          {data.applications.length > 0 ? (
-            data.applications.map((application) => (
+          {data.recentApplications.length > 0 ? (
+            data.recentApplications.map((application) => (
               <article
                 key={application.id}
                 className="border-line bg-surface-alt grid gap-4 rounded-[1.5rem] border p-5 md:grid-cols-[1.2fr_1fr_auto] md:items-center"
@@ -68,7 +72,7 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
                 </div>
                 <div>
                   <p className="bg-brand/10 text-brand inline-flex rounded-full px-3 py-1 text-xs font-semibold tracking-[0.22em] uppercase">
-                    {application.status}
+                    {application.statusLabel}
                   </p>
                 </div>
                 <p className="text-muted text-sm md:text-right">
@@ -82,56 +86,11 @@ export const DashboardOverview = ({ data }: DashboardOverviewProps) => {
                 No applications yet
               </h3>
               <p className="text-muted mt-3 text-sm leading-7">
-                Your saved roles will appear here once you start tracking them.
+                Use the form above to create your first tracked application.
               </p>
             </article>
           )}
         </div>
-      </section>
-
-      <section className="grid gap-4 xl:grid-cols-2">
-        <article
-          id="pipeline"
-          className="border-line bg-surface rounded-[1.5rem] border p-6 shadow-[0_24px_72px_-64px_rgba(8,22,47,0.24)]"
-        >
-          <h2 className="text-foreground text-2xl font-semibold tracking-[-0.04em]">
-            Pipeline summary
-          </h2>
-          <div className="mt-6 grid gap-3">
-            {data.statusSummary.map((item) => (
-              <div
-                key={item.label}
-                className="border-line bg-surface-alt flex items-center justify-between rounded-[1.25rem] border px-4 py-3"
-              >
-                <span className="text-muted text-sm font-medium">
-                  {item.label}
-                </span>
-                <span className="text-foreground text-lg font-semibold">
-                  {item.count}
-                </span>
-              </div>
-            ))}
-          </div>
-        </article>
-
-        <article
-          id="resumes"
-          className="border-line bg-surface rounded-[1.5rem] border p-6 shadow-[0_24px_72px_-64px_rgba(8,22,47,0.24)]"
-        >
-          <h2 className="text-foreground text-2xl font-semibold tracking-[-0.04em]">
-            Resume library
-          </h2>
-          <p className="text-muted mt-3 text-sm leading-7">
-            Keep tailored resume versions ready so each application can point to
-            the right file.
-          </p>
-          <div className="border-line bg-surface-alt mt-6 rounded-[1.5rem] border p-5">
-            <p className="text-muted text-sm font-medium">Saved resumes</p>
-            <p className="text-foreground mt-4 text-4xl font-semibold tracking-[-0.05em]">
-              {data.resumeCount}
-            </p>
-          </div>
-        </article>
       </section>
     </div>
   );

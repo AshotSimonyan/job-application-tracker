@@ -1,8 +1,8 @@
 export const dashboardNavItems = [
-  { href: "/dashboard", label: "Overview", active: true },
-  { href: "#applications", label: "Applications", active: false },
-  { href: "#pipeline", label: "Pipeline", active: false },
-  { href: "#resumes", label: "Resumes", active: false },
+  { href: "/dashboard", label: "Overview" },
+  { href: "/dashboard/applications", label: "Applications" },
+  { href: "/dashboard/pipeline", label: "Pipeline" },
+  { href: "/dashboard/resumes", label: "Resumes" },
 ] as const;
 
 export const applicationStatusOrder = [
