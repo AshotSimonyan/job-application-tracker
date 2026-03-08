@@ -1,9 +1,10 @@
 import { SetupNotice } from "@/components/ui/setup-notice";
 import { DashboardShell } from "@/features/dashboard/components/dashboard-shell";
 import { supabaseSetupSteps } from "@/features/auth/supabase-setup";
+import { getDashboardData } from "@/features/dashboard/server/get-dashboard-data";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
   if (!isSupabaseConfigured()) {
     return (
       <div className="mx-auto flex min-h-[calc(100vh-81px)] w-full max-w-4xl items-center px-6 py-12 lg:px-10">
@@ -16,7 +17,9 @@ const DashboardPage = () => {
     );
   }
 
-  return <DashboardShell />;
+  const dashboardData = await getDashboardData();
+
+  return <DashboardShell data={dashboardData} />;
 };
 
 export default DashboardPage;

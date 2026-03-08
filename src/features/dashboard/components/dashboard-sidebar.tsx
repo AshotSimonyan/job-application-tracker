@@ -2,8 +2,9 @@ import Link from "next/link";
 
 import { SignOutButton } from "@/features/auth/components/sign-out-button";
 import { dashboardNavItems } from "@/features/dashboard/content/dashboard-content";
+import type { DashboardSidebarProps } from "@/features/dashboard/types";
 
-export const DashboardSidebar = () => {
+export const DashboardSidebar = ({ data }: DashboardSidebarProps) => {
   return (
     <aside className="border-line bg-panel text-panel-foreground rounded-[2rem] border p-6 shadow-[0_36px_100px_-62px_rgba(8,22,47,0.92)] lg:sticky lg:top-28 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto lg:p-8">
       <div>
@@ -33,11 +34,15 @@ export const DashboardSidebar = () => {
 
       <div className="mt-12 rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
         <p className="text-panel-foreground/45 text-xs font-semibold tracking-[0.24em] uppercase">
-          This week
+          Workspace snapshot
         </p>
         <p className="text-panel-foreground/78 mt-3 text-sm leading-7">
-          Follow up with hiring teams, prepare for scheduled interviews, and
-          keep your materials ready for the next role.
+          {data.applicationCount} tracked{" "}
+          {data.applicationCount === 1 ? "application" : "applications"} and{" "}
+          {data.resumeCount} saved {data.resumeCount === 1 ? "resume" : "resumes"}.
+        </p>
+        <p className="text-panel-foreground/55 mt-3 text-sm">
+          {data.memberSinceLabel}
         </p>
       </div>
 

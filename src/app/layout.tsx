@@ -4,9 +4,12 @@ import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { getSiteHeaderUser } from "@/components/layout/site-header.utils";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { siteConfig } from "@/config/site";
 import type { AppLayoutProps } from "@/app/types";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import "./globals.css";
 
 const sans = Space_Grotesk({
@@ -29,7 +32,18 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-const RootLayout = ({ children }: AppLayoutProps) => {
+const RootLayout = async ({ children }: AppLayoutProps) => {
+  let headerUser = null;
+
+  if (isSupabaseConfigured()) {
+    const supabase = await createServerSupabaseClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    headerUser = getSiteHeaderUser(user);
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${sans.variable} ${mono.variable}`}>
@@ -48,7 +62,7 @@ const RootLayout = ({ children }: AppLayoutProps) => {
         </Script>
         <ThemeProvider>
           <div className="relative flex min-h-screen flex-col">
-            <SiteHeader />
+            <SiteHeader user={headerUser} />
             <main className="flex-1">{children}</main>
             <SiteFooter />
           </div>

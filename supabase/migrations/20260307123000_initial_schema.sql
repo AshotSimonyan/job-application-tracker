@@ -25,7 +25,7 @@ create table public.profiles (
 );
 
 create table public.resumes (
-  id uuid primary key default gen_random_uuid(),
+  id uuid primary key default uuid_generate_v4(),
   user_id uuid not null references auth.users (id) on delete cascade,
   name text not null,
   file_path text not null,
@@ -33,7 +33,7 @@ create table public.resumes (
 );
 
 create table public.job_applications (
-  id uuid primary key default gen_random_uuid(),
+  id uuid primary key default uuid_generate_v4(),
   user_id uuid not null references auth.users (id) on delete cascade,
   title text not null,
   company text not null,
