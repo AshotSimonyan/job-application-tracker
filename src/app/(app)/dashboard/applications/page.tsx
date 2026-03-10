@@ -1,10 +1,16 @@
 import { DashboardApplicationsView } from "@/features/dashboard/components/dashboard-applications-view";
-import { getDashboardData } from "@/features/dashboard/server/get-dashboard-data";
+import { getDashboardApplicationsPageData } from "@/features/dashboard/server/get-dashboard-applications-page-data";
 
-const DashboardApplicationsPage = async () => {
-  const dashboardData = await getDashboardData();
+import type { DashboardApplicationsPageProps } from "@/features/dashboard/types";
 
-  return <DashboardApplicationsView applications={dashboardData.applications} />;
+const DashboardApplicationsPage = async ({
+  searchParams,
+}: DashboardApplicationsPageProps) => {
+  const resolvedSearchParams = await searchParams;
+  const applicationsPageData =
+    await getDashboardApplicationsPageData(resolvedSearchParams);
+
+  return <DashboardApplicationsView {...applicationsPageData} />;
 };
 
 export default DashboardApplicationsPage;

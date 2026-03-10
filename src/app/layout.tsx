@@ -63,7 +63,7 @@ const RootLayout = async ({ children }: AppLayoutProps) => {
         <ThemeProvider>
           <div className="relative flex min-h-screen flex-col">
             <SiteHeader user={headerUser} />
-            <main className="flex-1">{children}</main>
+            <main className="flex min-h-0 flex-1 flex-col">{children}</main>
             <SiteFooter />
           </div>
         </ThemeProvider>

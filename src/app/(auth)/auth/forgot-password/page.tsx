@@ -29,6 +29,7 @@ const ForgotPasswordPage = async ({ searchParams }: AuthPageProps) => {
       eyebrow="Password recovery"
       title="Recover access to your workspace."
       description="Request a reset link and we will send you back into the app so you can set a new password."
+      variant="compact"
     >
       {isSupabaseConfigured() ? (
         <ForgotPasswordForm

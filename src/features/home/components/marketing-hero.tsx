@@ -1,9 +1,14 @@
 import { ButtonLink } from "@/components/ui/button-link";
-import { homeHighlights } from "@/features/home/content/home-content";
+import { ApplicationStatusBadge } from "@/features/dashboard/components/application-status-badge";
+import {
+  homeHighlights,
+  homeRecentRoles,
+} from "@/features/home/content/home-content";
+import type { MarketingHeroProps } from "@/features/home/types";
 
-export const MarketingHero = () => {
+export const MarketingHero = ({ isSignedIn }: MarketingHeroProps) => {
   return (
-    <section className="grid gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
+    <section className="grid gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:items-end">
       <div className="space-y-8">
         <div className="border-brand/15 bg-brand/8 text-brand inline-flex items-center rounded-full border px-4 py-2 text-xs font-semibold tracking-[0.24em] uppercase">
           Stay on top of your search
@@ -20,35 +25,71 @@ export const MarketingHero = () => {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row">
-          <ButtonLink href="/dashboard">Open dashboard</ButtonLink>
-          <ButtonLink href="/auth/sign-in" variant="secondary">
-            Sign in
+          <ButtonLink href={isSignedIn ? "/dashboard" : "/auth/sign-up"}>
+            {isSignedIn ? "Open dashboard" : "Get started"}
           </ButtonLink>
+          {!isSignedIn ? (
+            <ButtonLink href="/auth/sign-in" variant="secondary">
+              Sign in
+            </ButtonLink>
+          ) : null}
         </div>
       </div>
 
-      <div className="border-line bg-surface overflow-hidden rounded-[2rem] border shadow-[0_40px_110px_-60px_rgba(8,22,47,0.45)]">
-        <div className="border-line bg-panel text-panel-foreground border-b px-6 py-5">
-          <p className="text-panel-foreground/55 text-xs font-semibold tracking-[0.26em] uppercase">
-            Weekly snapshot
-          </p>
-          <p className="mt-3 text-2xl font-semibold tracking-[-0.04em]">
-            Your search at a glance
-          </p>
-        </div>
-
-        <div className="grid gap-4 p-6 sm:grid-cols-3 lg:grid-cols-1">
-          {homeHighlights.map((item) => (
-            <div
-              key={item.label}
-              className="border-line bg-surface-alt rounded-[1.5rem] border p-5"
-            >
-              <p className="text-muted text-sm font-medium">{item.label}</p>
-              <p className="text-foreground mt-6 text-4xl font-semibold tracking-[-0.06em]">
-                {item.value}
+      <div className="border-line bg-surface overflow-hidden rounded-[1.5rem] border shadow-[0_28px_72px_-60px_rgba(8,22,47,0.28)]">
+        <div className="border-line bg-surface-alt border-b px-5 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <p className="text-muted text-[11px] font-semibold tracking-[0.24em] uppercase">
+                Live preview
+              </p>
+              <p className="text-foreground mt-2 text-xl font-semibold tracking-[-0.03em]">
+                Search workspace
               </p>
             </div>
-          ))}
+          </div>
+        </div>
+
+        <div className="space-y-4 p-5 lg:p-6">
+          <div className="grid gap-3 sm:grid-cols-3">
+            {homeHighlights.map((item) => (
+              <div
+                key={item.label}
+                className="border-line bg-surface-alt rounded-xl border p-4"
+              >
+                <p className="text-muted text-sm font-medium">{item.label}</p>
+                <p className="text-foreground mt-4 text-3xl font-semibold tracking-[-0.05em]">
+                  {item.value}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="border-line bg-surface-alt rounded-xl border p-4">
+            <p className="text-muted text-xs font-semibold tracking-[0.22em] uppercase">
+              Latest roles
+            </p>
+
+            <div className="mt-4 space-y-2">
+              {homeRecentRoles.map((role) => (
+                <div
+                  key={`${role.company}-${role.title}`}
+                  className="border-line bg-surface rounded-xl border px-4 py-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-muted text-sm">{role.company}</p>
+                      <p className="text-foreground mt-1 text-base font-semibold">
+                        {role.title}
+                      </p>
+                    </div>
+                    <ApplicationStatusBadge status={role.status} />
+                  </div>
+                  <p className="text-muted mt-3 text-sm">{role.updatedLabel}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

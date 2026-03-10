@@ -11,6 +11,7 @@ export type DashboardMetric = {
 };
 
 export type DashboardStatusSummaryItem = {
+  status: ApplicationStatus;
   label: string;
   count: number;
 };
@@ -18,6 +19,7 @@ export type DashboardStatusSummaryItem = {
 export type DashboardResumeItem = {
   id: string;
   name: string;
+  filePath: string;
   createdAt: string;
   createdAtLabel: string;
 };
@@ -64,18 +66,41 @@ export type CreateApplicationFormValues = {
   resume_id: string;
 };
 
-export type CreateApplicationActionResult = {
+export type ApplicationMutationResult = {
   status: "success" | "error";
   message: string;
 };
 
-export type CreateApplicationFormAction = (
+export type ResumeMutationResult = {
+  status: "success" | "error";
+  message: string;
+};
+
+export type ApplicationFormAction = (
   formData: FormData,
-) => Promise<CreateApplicationActionResult>;
+) => Promise<ApplicationMutationResult>;
+
+export type ApplicationFormMode = "create" | "edit";
+
+export type ApplicationFormProps = {
+  action: ApplicationFormAction;
+  resumes: DashboardResumeItem[];
+  defaultValues: CreateApplicationFormValues;
+  mode: ApplicationFormMode;
+  title: string;
+  description: string;
+  submitLabel: string;
+  successRedirectHref?: string;
+  applicationId?: string;
+  backHref?: string;
+  backLabel?: string;
+};
 
 export type CreateApplicationFormProps = {
-  action: CreateApplicationFormAction;
+  action: ApplicationFormAction;
   resumes: DashboardResumeItem[];
+  successRedirectHref?: string;
+  backHref?: string;
 };
 
 export type DashboardShellProps = {
@@ -93,6 +118,13 @@ export type DashboardOverviewProps = {
 
 export type DashboardApplicationsViewProps = {
   applications: DashboardApplicationItem[];
+  page: number;
+  pageSize: number;
+  search: string;
+  totalApplications: number;
+  totalPages: number;
+  sortBy: DashboardApplicationsSortField;
+  sortDirection: DashboardApplicationsSortDirection;
 };
 
 export type DashboardPipelineViewProps = {
@@ -101,4 +133,75 @@ export type DashboardPipelineViewProps = {
 
 export type DashboardResumesViewProps = {
   resumes: DashboardResumeItem[];
+  action: (formData: FormData) => Promise<ResumeMutationResult>;
+};
+
+export type ResumeUploadFormProps = {
+  action: (formData: FormData) => Promise<ResumeMutationResult>;
+};
+
+export type ResumeDeleteButtonProps = {
+  resumeId: string;
+  resumeName: string;
+};
+
+export type DashboardApplicationsSearchParams = {
+  page?: string | string[];
+  q?: string | string[];
+  sort?: string | string[];
+  dir?: string | string[];
+};
+
+export type DashboardApplicationsPageProps = {
+  searchParams: Promise<DashboardApplicationsSearchParams>;
+};
+
+export type DashboardApplicationEditPageParams = {
+  applicationId: string;
+};
+
+export type DashboardApplicationEditPageProps = {
+  params: Promise<DashboardApplicationEditPageParams>;
+};
+
+export type ConfirmDialogProps = {
+  isOpen: boolean;
+  title: string;
+  description: string;
+  confirmLabel: string;
+  cancelLabel?: string;
+  isBusy?: boolean;
+  onCancel: () => void;
+  onConfirm: () => void | Promise<void>;
+};
+
+export type ApplicationTableRowActionsProps = {
+  applicationId: string;
+  returnTo: string;
+};
+
+export type DashboardApplicationsPageData = {
+  applications: DashboardApplicationItem[];
+  page: number;
+  pageSize: number;
+  search: string;
+  totalApplications: number;
+  totalPages: number;
+  sortBy: DashboardApplicationsSortField;
+  sortDirection: DashboardApplicationsSortDirection;
+};
+
+export type DashboardApplicationsSortField =
+  | "updated_at"
+  | "title"
+  | "company"
+  | "status"
+  | "applied_at";
+
+export type DashboardApplicationsSortDirection = "asc" | "desc";
+
+export type ApplicationStatusBadgeProps = {
+  status: ApplicationStatus;
+  label?: string;
+  className?: string;
 };

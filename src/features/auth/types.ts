@@ -43,6 +43,7 @@ export type AuthShellProps = {
   description: string;
   eyebrow: string;
   children: ReactNode;
+  variant?: "default" | "compact";
 };
 
 export type AuthFormProps = {

@@ -4,6 +4,21 @@ export const homeHighlights = [
   { label: "Upcoming deadlines", value: "5" },
 ] as const;
 
+export const homeRecentRoles = [
+  {
+    company: "Northstar Labs",
+    title: "Frontend Engineer",
+    status: "interview",
+    updatedLabel: "Updated today",
+  },
+  {
+    company: "Aperture Health",
+    title: "Product Designer",
+    status: "applied",
+    updatedLabel: "Applied yesterday",
+  },
+] as const;
+
 export const homePillars = [
   {
     title: "Track every opportunity",

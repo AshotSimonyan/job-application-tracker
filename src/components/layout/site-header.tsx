@@ -11,7 +11,7 @@ export const SiteHeader = ({ user }: SiteHeaderProps) => {
 
   return (
     <header className="border-line/80 bg-surface/80 sticky top-0 z-30 border-b backdrop-blur-xl">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-6 py-4 lg:px-10">
+      <div className="mx-auto flex w-full max-w-[1720px] items-center justify-between gap-4 px-6 py-4 lg:px-10">
         <Link
           href="/"
           className="flex items-center gap-3 text-sm font-semibold"

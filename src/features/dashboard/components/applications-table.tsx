@@ -6,17 +6,38 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { applicationTableColumns } from "@/features/dashboard/content/application-table-columns";
+import { getApplicationTableColumns } from "@/features/dashboard/content/application-table-columns";
 
-import type { DashboardApplicationsViewProps } from "@/features/dashboard/types";
+import type {
+  DashboardApplicationItem,
+  DashboardApplicationsSortDirection,
+  DashboardApplicationsSortField,
+} from "@/features/dashboard/types";
+
+type ApplicationsTableProps = {
+  applications: DashboardApplicationItem[];
+  returnTo: string;
+  sortBy: DashboardApplicationsSortField;
+  sortDirection: DashboardApplicationsSortDirection;
+  search: string;
+};
 
 export const ApplicationsTable = ({
   applications,
-}: DashboardApplicationsViewProps) => {
+  returnTo,
+  sortBy,
+  sortDirection,
+  search,
+}: ApplicationsTableProps) => {
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: applications,
-    columns: applicationTableColumns,
+    columns: getApplicationTableColumns({
+      returnTo,
+      sortBy,
+      sortDirection,
+      search,
+    }),
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -29,7 +50,7 @@ export const ApplicationsTable = ({
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="text-muted border-line border-b px-4 py-3 text-left text-xs font-semibold tracking-[0.22em] uppercase"
+                  className="text-muted border-line border-b px-3 py-2.5 text-left text-[11px] font-semibold tracking-[0.2em] uppercase"
                 >
                   {header.isPlaceholder
                     ? null
@@ -48,7 +69,7 @@ export const ApplicationsTable = ({
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className="text-foreground border-line border-b px-4 py-4 align-top text-sm"
+                  className="text-foreground border-line border-b px-3 py-3 align-top text-sm"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

@@ -33,8 +33,11 @@ export const ResetPasswordForm = ({
     setIsLoading(true);
 
     void (async () => {
-      await action(formData);
-      setIsLoading(false);
+      try {
+        await action(formData);
+      } finally {
+        setIsLoading(false);
+      }
     })();
   });
 
@@ -56,8 +59,8 @@ export const ResetPasswordForm = ({
         <div
           className={
             message.type === "error"
-              ? "rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-950/60 dark:bg-red-950/30 dark:text-red-200"
-              : "rounded-[1.5rem] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-950/60 dark:bg-emerald-950/30 dark:text-emerald-200"
+              ? "rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-950/60 dark:bg-red-950/30 dark:text-red-200"
+              : "rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-950/60 dark:bg-emerald-950/30 dark:text-emerald-200"
           }
         >
           {message.text}
@@ -71,7 +74,7 @@ export const ResetPasswordForm = ({
           placeholder="Enter your new password"
           autoComplete="new-password"
           className={cn(
-            "border-line bg-surface-alt text-foreground placeholder:text-muted/70 focus:border-brand h-12 rounded-2xl border px-4 text-sm transition-colors outline-none",
+            "border-line bg-surface-alt text-foreground placeholder:text-muted/70 focus:border-brand h-11 rounded-xl border px-3.5 text-sm transition-colors outline-none",
             errors.password ? "border-red-400 focus:border-red-500" : undefined,
           )}
           {...register("password")}
@@ -83,7 +86,7 @@ export const ResetPasswordForm = ({
         ) : null}
       </label>
 
-      <div className="border-line bg-surface-alt text-muted rounded-[1.5rem] border p-4 text-sm leading-7">
+      <div className="border-line bg-surface-alt text-muted rounded-xl border p-4 text-sm leading-7">
         Use at least 6 characters. After saving, you will be redirected back
         into the app.
       </div>
@@ -91,7 +94,7 @@ export const ResetPasswordForm = ({
       <button
         type="submit"
         disabled={isBusy}
-        className="bg-panel text-panel-foreground inline-flex h-12 items-center justify-center rounded-full px-5 text-sm font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+        className="bg-panel text-panel-foreground inline-flex h-11 items-center justify-center rounded-xl px-4 text-sm font-semibold transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {isBusy ? "Updating..." : "Update password"}
       </button>

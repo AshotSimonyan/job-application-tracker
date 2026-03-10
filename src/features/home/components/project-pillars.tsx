@@ -3,7 +3,7 @@ import { homePillars } from "@/features/home/content/home-content";
 
 export const ProjectPillars = () => {
   return (
-    <section className="border-line bg-surface space-y-10 rounded-[2rem] border p-8 shadow-[0_28px_90px_-60px_rgba(8,22,47,0.32)] sm:p-10">
+    <section className="border-line bg-surface space-y-10 rounded-[1.5rem] border p-8 shadow-[0_28px_90px_-60px_rgba(8,22,47,0.32)] sm:p-10">
       <SectionHeading
         eyebrow="Everything in one workflow"
         title="Built around the way a real search actually moves"
@@ -14,7 +14,7 @@ export const ProjectPillars = () => {
         {homePillars.map((pillar) => (
           <article
             key={pillar.title}
-            className="border-line bg-surface-alt rounded-[1.5rem] border p-6"
+            className="border-line bg-surface-alt rounded-xl border p-6"
           >
             <h3 className="text-foreground text-2xl font-semibold tracking-[-0.04em]">
               {pillar.title}

@@ -15,7 +15,6 @@ export const authFormContent: Record<
     alternateHref: string;
     alternateLabel: string;
     alternateAction: string;
-    note: string;
   }
 > = {
   "sign-in": {
@@ -26,7 +25,6 @@ export const authFormContent: Record<
     alternateHref: "/auth/sign-up",
     alternateLabel: "New here?",
     alternateAction: "Create an account",
-    note: "Use the email and password linked to your workspace.",
   },
   "sign-up": {
     title: "Create your workspace",
@@ -36,6 +34,5 @@ export const authFormContent: Record<
     alternateHref: "/auth/sign-in",
     alternateLabel: "Already have an account?",
     alternateAction: "Sign in",
-    note: "If email confirmation is enabled, you will verify your address before signing in.",
   },
 };

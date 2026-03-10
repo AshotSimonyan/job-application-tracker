@@ -1,10 +1,8 @@
 import { cache } from "react";
 
-import {
-  applicationStatusLabels,
-  applicationStatusOrder,
-} from "@/features/dashboard/content/dashboard-content";
+import { applicationStatusOrder } from "@/features/dashboard/content/dashboard-content";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { getApplicationStatusLabel } from "@/features/dashboard/utils";
 
 import type {
   ApplicationStatus,
@@ -20,14 +18,6 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
   year: "numeric",
 });
-
-const statusDisplayMap: Record<ApplicationStatus, string> = {
-  saved: applicationStatusLabels.saved,
-  applied: applicationStatusLabels.applied,
-  interview: applicationStatusLabels.interview,
-  offer: applicationStatusLabels.offer,
-  rejected: applicationStatusLabels.rejected,
-};
 
 const pluralize = (count: number, singular: string, plural?: string) => {
   if (count === 1) {
@@ -81,7 +71,7 @@ const buildMetrics = (
       note:
         resumeCount > 0
           ? `${resumeCount} ${pluralize(resumeCount, "version")} ready to attach`
-          : "Add a resume once storage is connected.",
+          : "Upload a resume to start attaching it to roles.",
     },
   ];
 };
@@ -90,7 +80,8 @@ const buildStatusSummary = (
   statusSummary: Record<ApplicationStatus, number>,
 ): DashboardStatusSummaryItem[] => {
   return applicationStatusOrder.map((status) => ({
-    label: statusDisplayMap[status],
+    status,
+    label: getApplicationStatusLabel(status),
     count: statusSummary[status],
   }));
 };
@@ -99,12 +90,14 @@ const buildResumes = (
   resumes: {
     id: string;
     name: string;
+    file_path: string;
     created_at: string;
   }[],
 ): DashboardResumeItem[] => {
   return resumes.map((resume) => ({
     id: resume.id,
     name: resume.name,
+    filePath: resume.file_path,
     createdAt: resume.created_at,
     createdAtLabel: formatDate(resume.created_at),
   }));
@@ -137,7 +130,7 @@ const buildApplications = (
     source: application.source,
     url: application.url,
     status: application.status,
-    statusLabel: statusDisplayMap[application.status],
+    statusLabel: getApplicationStatusLabel(application.status),
     notes: application.notes,
     resumeId: application.resume_id,
     resumeName: application.resume_id
@@ -193,7 +186,7 @@ export const getDashboardData = cache(async (): Promise<DashboardData> => {
       supabase.from("profiles").select("created_at").eq("id", user.id).maybeSingle(),
       supabase
         .from("resumes")
-        .select("id, name, created_at")
+        .select("id, name, file_path, created_at")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false }),
       supabase
