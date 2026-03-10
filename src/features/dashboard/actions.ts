@@ -24,6 +24,7 @@ const allowedResumeMimeTypes = new Set([
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ]);
 const maxResumeFileSize = 5 * 1024 * 1024;
+const getSoftDeleteTimestamp = () => new Date().toISOString();
 
 export const createJobApplicationAction = async (
   formData: FormData,
@@ -132,16 +133,26 @@ export const updateJobApplicationAction = async (
     applied_at: getNullableDashboardFormValue(formData, "applied_at"),
   };
 
-  const { error } = await supabase
+  const { data: application, error } = await supabase
     .from("job_applications")
     .update(payload)
     .eq("id", applicationId)
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .is("deleted_at", null)
+    .select("id")
+    .maybeSingle();
 
   if (error) {
     return {
       status: "error",
       message: error.message,
+    };
+  }
+
+  if (!application) {
+    return {
+      status: "error",
+      message: "Application not found.",
     };
   }
 
@@ -177,11 +188,16 @@ export const deleteJobApplicationAction = async (
     };
   }
 
-  const { error } = await supabase
+  const { data: application, error } = await supabase
     .from("job_applications")
-    .delete()
+    .update({
+      deleted_at: getSoftDeleteTimestamp(),
+    })
     .eq("id", applicationId)
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .is("deleted_at", null)
+    .select("id")
+    .maybeSingle();
 
   if (error) {
     return {
@@ -190,11 +206,18 @@ export const deleteJobApplicationAction = async (
     };
   }
 
+  if (!application) {
+    return {
+      status: "error",
+      message: "Application not found.",
+    };
+  }
+
   revalidatePath("/dashboard", "layout");
 
   return {
     status: "success",
-    message: "Application deleted.",
+    message: "Application archived.",
   };
 };
 
@@ -323,9 +346,10 @@ export const deleteResumeAction = async (
 
   const { data: resume, error: resumeError } = await supabase
     .from("resumes")
-    .select("id, file_path")
+    .select("id")
     .eq("id", resumeId)
     .eq("user_id", user.id)
+    .is("deleted_at", null)
     .maybeSingle();
 
   if (resumeError || !resume) {
@@ -335,25 +359,32 @@ export const deleteResumeAction = async (
     };
   }
 
-  const { error: storageError } = await supabase.storage
-    .from(resumeStorageBucket)
-    .remove([resume.file_path]);
+  const { error: unlinkError } = await supabase
+    .from("job_applications")
+    .update({
+      resume_id: null,
+    })
+    .eq("user_id", user.id)
+    .eq("resume_id", resume.id)
+    .is("deleted_at", null);
 
-  if (storageError) {
+  if (unlinkError) {
     return {
       status: "error",
-      message:
-        storageError.message === "Bucket not found"
-          ? "Create the `resumes` storage bucket before deleting files."
-          : storageError.message,
+      message: unlinkError.message,
     };
   }
 
-  const { error: deleteError } = await supabase
+  const { data: deletedResume, error: deleteError } = await supabase
     .from("resumes")
-    .delete()
+    .update({
+      deleted_at: getSoftDeleteTimestamp(),
+    })
     .eq("id", resumeId)
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .is("deleted_at", null)
+    .select("id")
+    .maybeSingle();
 
   if (deleteError) {
     return {
@@ -362,10 +393,17 @@ export const deleteResumeAction = async (
     };
   }
 
+  if (!deletedResume) {
+    return {
+      status: "error",
+      message: "Resume not found.",
+    };
+  }
+
   revalidatePath("/dashboard", "layout");
 
   return {
     status: "success",
-    message: "Resume deleted.",
+    message: "Resume archived.",
   };
 };

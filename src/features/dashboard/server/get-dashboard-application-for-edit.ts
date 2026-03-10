@@ -38,11 +38,13 @@ export const getDashboardApplicationForEdit = async (
       )
       .eq("id", applicationId)
       .eq("user_id", user.id)
+      .is("deleted_at", null)
       .maybeSingle(),
     supabase
       .from("resumes")
       .select("id, name, file_path, created_at")
       .eq("user_id", user.id)
+      .is("deleted_at", null)
       .order("created_at", { ascending: false }),
   ]);
 

@@ -188,6 +188,7 @@ export const getDashboardData = cache(async (): Promise<DashboardData> => {
         .from("resumes")
         .select("id, name, file_path, created_at")
         .eq("user_id", user.id)
+        .is("deleted_at", null)
         .order("created_at", { ascending: false }),
       supabase
         .from("job_applications")
@@ -195,6 +196,7 @@ export const getDashboardData = cache(async (): Promise<DashboardData> => {
           "id, title, company, location, source, url, status, notes, resume_id, applied_at, created_at, updated_at",
         )
         .eq("user_id", user.id)
+        .is("deleted_at", null)
         .order("updated_at", { ascending: false }),
     ]);
 

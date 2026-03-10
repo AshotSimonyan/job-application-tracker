@@ -36,8 +36,8 @@ export const ApplicationTableRowActions = ({
           onClick={() => {
             setIsDialogOpen(true);
           }}
-          aria-label="Delete application"
-          title="Delete application"
+          aria-label="Archive application"
+          title="Archive application"
           className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-600 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300 dark:hover:bg-red-950/35"
         >
           <TrashIcon className="h-[1.1rem] w-[1.1rem]" />
@@ -46,9 +46,9 @@ export const ApplicationTableRowActions = ({
 
       <ConfirmDialog
         isOpen={isDialogOpen}
-        title="Delete application"
-        description="This will permanently remove the selected application from your tracker."
-        confirmLabel="Delete"
+        title="Archive application"
+        description="This will remove the selected application from your active tracker while keeping the record in the database."
+        confirmLabel="Archive"
         isBusy={isDeleting}
         onCancel={() => {
           if (!isDeleting) {

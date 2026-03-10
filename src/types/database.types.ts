@@ -19,6 +19,7 @@ export type Database = {
           applied_at: string | null
           company: string
           created_at: string
+          deleted_at: string | null
           id: string
           location: string | null
           notes: string | null
@@ -34,6 +35,7 @@ export type Database = {
           applied_at?: string | null
           company: string
           created_at?: string
+          deleted_at?: string | null
           id?: string
           location?: string | null
           notes?: string | null
@@ -49,6 +51,7 @@ export type Database = {
           applied_at?: string | null
           company?: string
           created_at?: string
+          deleted_at?: string | null
           id?: string
           location?: string | null
           notes?: string | null
@@ -91,6 +94,7 @@ export type Database = {
       resumes: {
         Row: {
           created_at: string
+          deleted_at: string | null
           file_path: string
           id: string
           name: string
@@ -98,6 +102,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           file_path: string
           id?: string
           name: string
@@ -105,6 +110,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           file_path?: string
           id?: string
           name?: string

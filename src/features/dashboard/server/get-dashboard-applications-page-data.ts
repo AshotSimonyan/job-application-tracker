@@ -127,7 +127,8 @@ export const getDashboardApplicationsPageData = async (
   let countQuery = supabase
     .from("job_applications")
     .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .is("deleted_at", null);
 
   let dataQuery = supabase
     .from("job_applications")
@@ -135,6 +136,7 @@ export const getDashboardApplicationsPageData = async (
       "id, title, company, location, source, url, status, notes, resume_id, applied_at, created_at, updated_at",
     )
     .eq("user_id", user.id)
+    .is("deleted_at", null)
     .order(sortBy, {
       ascending: sortDirection === "asc",
       nullsFirst: false,
@@ -151,7 +153,7 @@ export const getDashboardApplicationsPageData = async (
   const [{ count }, { data: applicationRows }, { data: resumeRows }] = await Promise.all([
     countQuery,
     dataQuery.range(rangeFrom, rangeTo),
-    supabase.from("resumes").select("id, name").eq("user_id", user.id),
+    supabase.from("resumes").select("id, name").eq("user_id", user.id).is("deleted_at", null),
   ]);
 
   const totalApplications = count ?? 0;

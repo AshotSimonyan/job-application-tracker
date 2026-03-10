@@ -21,6 +21,7 @@ Fields:
 - `name`
 - `file_path`
 - `created_at`
+- `deleted_at` for soft deletes
 
 ### `job_applications`
 Main MVP pipeline table.
@@ -39,6 +40,7 @@ Fields:
 - `applied_at`
 - `created_at`
 - `updated_at`
+- `deleted_at` for soft deletes
 
 ## Status enum
 
@@ -58,6 +60,7 @@ Row Level Security is enabled only for:
 
 Rules:
 - users can only access rows that belong to them
+- normal reads only return active rows where `deleted_at` is `null`
 - `profiles` is keyed directly by `auth.uid()`
 
 ## Included automation
@@ -72,4 +75,5 @@ This is enough to support the next product steps:
 - load the signed-in user's profile
 - create and list job applications
 - attach a resume to an application
+- archive resumes and applications without hard deleting database rows
 - replace the static dashboard with real data
