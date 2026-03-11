@@ -13,7 +13,7 @@ export const AuthShell = ({
     <div
       className={`grid w-full items-center gap-6 px-6 py-6 lg:px-10 lg:py-8 ${variant === "compact" ? "lg:grid-cols-[0.72fr_1.08fr]" : "lg:grid-cols-[0.95fr_1.05fr]"}`}
     >
-      <section className="border-line bg-panel text-panel-foreground rounded-[1.5rem] border p-6 shadow-[0_40px_110px_-60px_rgba(8,22,47,0.9)] sm:p-8">
+      <section className="order-2 border-line bg-panel text-panel-foreground rounded-[1.5rem] border p-6 shadow-[0_40px_110px_-60px_rgba(8,22,47,0.9)] sm:p-8 lg:order-1">
         <p className="text-panel-foreground/55 text-xs font-semibold tracking-[0.28em] uppercase">
           {eyebrow}
         </p>
@@ -43,7 +43,7 @@ export const AuthShell = ({
         ) : null}
       </section>
 
-      <section className="border-line bg-surface rounded-[1.5rem] border p-5 shadow-[0_28px_90px_-64px_rgba(8,22,47,0.28)] sm:p-6">
+      <section className="order-1 border-line bg-surface rounded-[1.5rem] border p-5 shadow-[0_28px_90px_-64px_rgba(8,22,47,0.28)] sm:p-6 lg:order-2">
         <div className="flex justify-end">
           <Link
             href="/"
