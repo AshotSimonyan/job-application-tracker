@@ -168,6 +168,7 @@ export type ConfirmDialogProps = {
   isOpen: boolean;
   title: string;
   description: string;
+  errorMessage?: string | null;
   confirmLabel: string;
   cancelLabel?: string;
   isBusy?: boolean;

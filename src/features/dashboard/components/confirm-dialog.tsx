@@ -6,6 +6,7 @@ export const ConfirmDialog = ({
   isOpen,
   title,
   description,
+  errorMessage,
   confirmLabel,
   cancelLabel = "Cancel",
   isBusy = false,
@@ -27,6 +28,11 @@ export const ConfirmDialog = ({
             {title}
           </h2>
           <p className="text-muted mt-3 text-sm leading-7">{description}</p>
+          {errorMessage ? (
+            <p className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-950/60 dark:bg-red-950/30 dark:text-red-200">
+              {errorMessage}
+            </p>
+          ) : null}
         </div>
 
         <div className="mt-6 flex items-center justify-end gap-3">

@@ -18,6 +18,7 @@ export const ApplicationTableRowActions = ({
   const router = useRouter();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   return (
     <>
@@ -34,6 +35,7 @@ export const ApplicationTableRowActions = ({
         <button
           type="button"
           onClick={() => {
+            setErrorMessage(null);
             setIsDialogOpen(true);
           }}
           aria-label="Archive application"
@@ -48,10 +50,12 @@ export const ApplicationTableRowActions = ({
         isOpen={isDialogOpen}
         title="Archive application"
         description="This will remove the selected application from your active tracker while keeping the record in the database."
+        errorMessage={errorMessage}
         confirmLabel="Archive"
         isBusy={isDeleting}
         onCancel={() => {
           if (!isDeleting) {
+            setErrorMessage(null);
             setIsDialogOpen(false);
           }
         }}
@@ -66,9 +70,12 @@ export const ApplicationTableRowActions = ({
             const result = await deleteJobApplicationAction(formData);
 
             if (result.status === "success") {
+              setErrorMessage(null);
               setIsDialogOpen(false);
               router.push(returnTo);
               router.refresh();
+            } else {
+              setErrorMessage(result.message);
             }
           } finally {
             setIsDeleting(false);

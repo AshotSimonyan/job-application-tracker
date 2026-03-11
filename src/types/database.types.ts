@@ -123,7 +123,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      soft_delete_job_application: {
+        Args: {
+          target_application_id: string
+        }
+        Returns: undefined
+      }
+      soft_delete_resume: {
+        Args: {
+          target_resume_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       application_status:
